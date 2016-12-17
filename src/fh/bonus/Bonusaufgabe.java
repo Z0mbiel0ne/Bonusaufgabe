@@ -19,9 +19,12 @@ public class Bonusaufgabe {
     
     private static String url;
     private static Connection conn;
-    private static int anzahl;
     private static Scanner scanner = new Scanner(System.in);
     private static int selection;
+    
+    public Bonusaufgabe() {
+        
+    }
 
     public static void main(String[] args) {
         
@@ -150,10 +153,6 @@ public class Bonusaufgabe {
             System.out.println("*** Exception:\n" + e);
             e.printStackTrace();
         }  
-    }
-
-    public Bonusaufgabe() {
-        
     }
  }
 
