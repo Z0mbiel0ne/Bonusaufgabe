@@ -1,6 +1,6 @@
 ### NetBeans ###
-nbproject
-build
-build.xml
-nbbuild
-manifest.mf
+/nbproject
+/build
+/build.xml
+/nbbuild
+/manifest.mf
