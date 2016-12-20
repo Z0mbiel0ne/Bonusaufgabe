@@ -59,12 +59,15 @@ public class Bonusaufgabe {
                 case 1: 
                     System.out.println("Auslast anzeigen");
                     auslast();
+                    break;
                 case 2:
                     System.out.println("Lieferer hinzufügen");
                     addLieferer();
+                    break;
                 case 3: 
                     System.out.println("Bezirk ändern");
                     changeBezirk();
+                    break;
                 case 4:
                     System.out.println("Exit");
                     break;
