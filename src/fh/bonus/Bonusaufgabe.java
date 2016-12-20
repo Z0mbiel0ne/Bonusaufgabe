@@ -7,7 +7,7 @@ package fh.bonus;
 
 /**
  *
- * @author masch142
+ * @author masch142 der Hurensohn
  */
 import java.sql.Connection;
 import java.sql.DriverManager;
