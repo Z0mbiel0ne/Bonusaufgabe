@@ -41,7 +41,7 @@ public class SQLService {
     public void set(String sql) throws SQLException {
         conn  = ConnectionManager.getConnection();
         stmt  = conn.createStatement();
-        stmt.executeQuery(sql);
+        stmt.executeUpdate(sql);
         
         stmt.close();
         conn.close();
