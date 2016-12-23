@@ -30,7 +30,8 @@ public class Bonusaufgabe {
             System.out.println("|        3. change Bezirk  |");
             System.out.println("|        4. Exit           |");
             System.out.println("|==========================|");
-
+            System.out.println("");
+            System.out.println("Eingabe:");
             // TODO Handle NumberFormatException
             selection = Integer.parseInt(scanner.nextLine());
 
@@ -39,16 +40,16 @@ public class Bonusaufgabe {
                     System.out.println("Auslast anzeigen");
                     auslast();
                 case 2:
-                    System.out.println("Lieferer hinzufügen");
+                    System.out.println("Lieferer hinzufï¿½gen");
                     addLieferer();
                 case 3:
-                    System.out.println("Bezirk ändern");
+                    System.out.println("Bezirk ï¿½ndern");
                     changeBezirk();
                 case 4:
                     System.out.println("Exit");
                     break;
                 default:
-                    System.err.println("Bitte geben sie eine Gültige Zahl ein!");
+                    System.err.println("Bitte geben sie eine Gï¿½ltige Zahl ein!");
                     break;
             }
         } while (selection != 4);
@@ -107,7 +108,7 @@ public class Bonusaufgabe {
                     + "from bestellung join liefererbestaetigung ON bestellung.idBestellung = liefererbestaetigung.Bestellung_idBestellung "
                     + "where liefererbestaetigung.Lieferer_idLieferer = lieferer.idLieferer "
                     + "and bestellung.bestellstatus = 'abgeschlossen') as Bestellungen "
-                    + "FROM `lieferer_lieferbezirk` " // liefert Anzahl abgeschlossener Bestellungen und Lieferer für das Bezirk
+                    + "FROM `lieferer_lieferbezirk` " // liefert Anzahl abgeschlossener Bestellungen und Lieferer fï¿½r das Bezirk
                     + "INNER JOIN lieferbezirk "
                     + "ON lieferbezirk.idLieferbezirk = lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk "
                     + "INNER JOIN lieferer "
