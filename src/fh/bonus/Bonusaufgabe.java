@@ -13,13 +13,10 @@ import java.util.Scanner;
 
 public class Bonusaufgabe {
 
-    private static final Scanner scanner = new Scanner(System.in);
-
-    public Bonusaufgabe() {
-    }
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int selection;
+        int selection = 0;
         do {
             System.out.println("|==========================|");
             System.out.println("|        Verwaltung        |");
@@ -30,29 +27,41 @@ public class Bonusaufgabe {
             System.out.println("|        3. change Bezirk  |");
             System.out.println("|        4. Exit           |");
             System.out.println("|==========================|");
+            System.out.print("Eingabe: ");
 
-            // TODO Handle NumberFormatException
-            selection = Integer.parseInt(scanner.nextLine());
+            try {
+                selection = Integer.parseInt(SCANNER.nextLine());
+                switch (selection) {
+                    case 1:
+                        System.out.println("Auslast anzeigen");
+                        auslast();
+                        break;
 
-            switch (selection) {
-                case 1:
-                    System.out.println("Auslast anzeigen");
-                    auslast();
-                case 2:
-                    System.out.println("Lieferer hinzufügen");
-                    addLieferer();
-                case 3:
-                    System.out.println("Bezirk ändern");
-                    changeBezirk();
-                case 4:
-                    System.out.println("Exit");
-                    break;
-                default:
-                    System.err.println("Bitte geben sie eine Gültige Zahl ein!");
-                    break;
+                    case 2:
+                        System.out.println("Lieferer hinzufÃ¼gen");
+                        addLieferer();
+                        break;
+
+                    case 3:
+                        System.out.println("Bezirk Ã¤ndern");
+                        changeBezirk();
+                        break;
+
+                    case 4:
+                        System.out.println("Exit");
+                        break;
+
+                    default:
+                        System.out.println("FEHLER: Bitte geben Sie eine gÃ¼ltige Zahl ein!");
+                        break;
+                }
+            } catch (NumberFormatException ex) {
+                System.err.println(ex);
+                System.out.println("FEHLER: Es dÃ¼rfen nur Zahlen eingegeben werden!");
+            } finally {
             }
         } while (selection != 4);
-        scanner.close();
+        SCANNER.close();
     }
 
     private static Connection createConn() {
@@ -73,8 +82,8 @@ public class Bonusaufgabe {
         System.out.println("Bitte geben sie die ID des Lieferers an: ");
         int id;
         System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(scanner.nextLine());
-        id = Integer.getInteger(scanner.nextLine());
+        int input = Integer.parseInt(SCANNER.nextLine());
+        id = Integer.getInteger(SCANNER.nextLine());
         try {
             String sqlString = "UPDATE DBUSER SET USERNAME = ? WHERE USER_ID = ?";
             PreparedStatement stmt = conn.prepareStatement(sqlString);
@@ -100,14 +109,14 @@ public class Bonusaufgabe {
     private static void auslast() {
         Connection conn = createConn();
         System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(scanner.nextLine());
+        int input = Integer.parseInt(SCANNER.nextLine());
         try {
             String sqlString = "SELECT COUNT(lieferer.idLieferer) as 'Lieferer', "
                     + "(Select count(bestellung.idBestellung) "
                     + "from bestellung join liefererbestaetigung ON bestellung.idBestellung = liefererbestaetigung.Bestellung_idBestellung "
                     + "where liefererbestaetigung.Lieferer_idLieferer = lieferer.idLieferer "
                     + "and bestellung.bestellstatus = 'abgeschlossen') as Bestellungen "
-                    + "FROM `lieferer_lieferbezirk` " // liefert Anzahl abgeschlossener Bestellungen und Lieferer für das Bezirk
+                    + "FROM `lieferer_lieferbezirk` " // liefert Anzahl abgeschlossener Bestellungen und Lieferer fï¿½r das Bezirk
                     + "INNER JOIN lieferbezirk "
                     + "ON lieferbezirk.idLieferbezirk = lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk "
                     + "INNER JOIN lieferer "
