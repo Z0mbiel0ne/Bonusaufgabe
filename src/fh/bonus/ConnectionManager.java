@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Manager for SQL-Connection
+ * Managment for SQL-Connection
  * 
  * @author ExaShox
  */
@@ -18,6 +18,11 @@ public class ConnectionManager {
             PASSWORD = "";
     private static Connection conn;
 
+    /**
+     * Get Database Connection
+     * 
+     * @return Connection
+     */
     public static Connection getConnection() {
         try {
             Class.forName(DRIVER);

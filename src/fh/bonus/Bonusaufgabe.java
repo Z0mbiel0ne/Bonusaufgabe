@@ -13,13 +13,10 @@ import java.util.Scanner;
 
 public class Bonusaufgabe {
 
-    private static final Scanner scanner = new Scanner(System.in);
-
-    public Bonusaufgabe() {
-    }
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int selection;
+        int selection = 0;
         do {
             System.out.println("|==========================|");
             System.out.println("|        Verwaltung        |");
@@ -30,6 +27,7 @@ public class Bonusaufgabe {
             System.out.println("|        3. change Bezirk  |");
             System.out.println("|        4. Exit           |");
             System.out.println("|==========================|");
+
             System.out.println("");
             System.out.println("Eingabe:");
             // TODO Handle NumberFormatException
@@ -62,9 +60,10 @@ public class Bonusaufgabe {
                 default:
                     System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
                     break;
+
             }
         } while (selection != 4);
-        scanner.close();
+        SCANNER.close();
     }
 
     private static Connection createConn() {
@@ -85,8 +84,8 @@ public class Bonusaufgabe {
         System.out.println("Bitte geben sie die ID des Lieferers an: ");
         int id;
         System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(scanner.nextLine());
-        id = Integer.getInteger(scanner.nextLine());
+        int input = Integer.parseInt(SCANNER.nextLine());
+        id = Integer.getInteger(SCANNER.nextLine());
         try {
             String sqlString = "UPDATE DBUSER SET USERNAME = ? WHERE USER_ID = ?";
             PreparedStatement stmt = conn.prepareStatement(sqlString);
@@ -114,6 +113,7 @@ public class Bonusaufgabe {
         try {
             Connection conn = createConn();
             String sqlString = "select lieferbezirk.plz from lieferbezirk";
+
             PreparedStatement stmt = conn.prepareStatement(sqlString);
             ResultSet rs = stmt.executeQuery();
 

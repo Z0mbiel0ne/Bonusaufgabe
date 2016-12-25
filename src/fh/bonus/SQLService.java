@@ -27,8 +27,23 @@ public class SQLService {
         stmt  = conn.createStatement();
         rs  = stmt.executeQuery(sql);
         
-        conn.close();
         stmt.close();
+        conn.close();
         return rs;
+    }
+    
+    /**
+     * Set data from Database
+     * 
+     * @param sql
+     * @throws SQLException 
+     */
+    public void set(String sql) throws SQLException {
+        conn  = ConnectionManager.getConnection();
+        stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+        
+        stmt.close();
+        conn.close();
     }
 }
