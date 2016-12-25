@@ -27,38 +27,40 @@ public class Bonusaufgabe {
             System.out.println("|        3. change Bezirk  |");
             System.out.println("|        4. Exit           |");
             System.out.println("|==========================|");
-            System.out.print("Eingabe: ");
 
-            try {
-                selection = Integer.parseInt(SCANNER.nextLine());
-                switch (selection) {
-                    case 1:
-                        System.out.println("Auslast anzeigen");
-                        auslast();
-                        break;
+            System.out.println("");
+            System.out.println("Eingabe:");
+            // TODO Handle NumberFormatException
+            selection = Integer.parseInt(scanner.nextLine());
 
-                    case 2:
-                        System.out.println("Lieferer hinzufügen");
-                        addLieferer();
-                        break;
+            switch (selection) {
+                case 1:
+                    System.out.println("__________________");
+                    System.out.println("|Auslast anzeigen|");
+                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                    auslast();
+                    break;
+                case 2:
+                    System.out.println("_____________________");
+                    System.out.println("|Lieferer hinzuf�gen|");
+                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                    addLieferer();
+                    break;
+                case 3:
+                    System.out.println("_______________");
+                    System.out.println("|Bezirk �ndern|");
+                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                    changeBezirk();
+                    break;
+                case 4:
+                    System.out.println("______");
+                    System.out.println("|Exit|");
+                    System.out.println("¯¯¯¯¯¯");
+                    break;
+                default:
+                    System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
+                    break;
 
-                    case 3:
-                        System.out.println("Bezirk ändern");
-                        changeBezirk();
-                        break;
-
-                    case 4:
-                        System.out.println("Exit");
-                        break;
-
-                    default:
-                        System.out.println("FEHLER: Bitte geben Sie eine gültige Zahl ein!");
-                        break;
-                }
-            } catch (NumberFormatException ex) {
-                System.err.println(ex);
-                System.out.println("FEHLER: Es dürfen nur Zahlen eingegeben werden!");
-            } finally {
             }
         } while (selection != 4);
         SCANNER.close();
@@ -107,49 +109,60 @@ public class Bonusaufgabe {
     }
 
     private static void auslast() {
-        Connection conn = createConn();
-        System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(SCANNER.nextLine());
+
         try {
-            String sqlString = "SELECT COUNT(lieferer.idLieferer) as 'Lieferer', "
-                    + "(Select count(bestellung.idBestellung) "
-                    + "from bestellung join liefererbestaetigung ON bestellung.idBestellung = liefererbestaetigung.Bestellung_idBestellung "
-                    + "where liefererbestaetigung.Lieferer_idLieferer = lieferer.idLieferer "
-                    + "and bestellung.bestellstatus = 'abgeschlossen') as Bestellungen "
-                    + "FROM `lieferer_lieferbezirk` " // liefert Anzahl abgeschlossener Bestellungen und Lieferer f�r das Bezirk
-                    + "INNER JOIN lieferbezirk "
-                    + "ON lieferbezirk.idLieferbezirk = lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk "
-                    + "INNER JOIN lieferer "
-                    + "on lieferer.idLieferer = lieferer_lieferbezirk.Lieferer_idLieferer "
-                    + "WHERE lieferbezirk.plz = ?";
+            Connection conn = createConn();
+            String sqlString = "select lieferbezirk.plz from lieferbezirk";
+
             PreparedStatement stmt = conn.prepareStatement(sqlString);
-            stmt.setInt(1, input);
             ResultSet rs = stmt.executeQuery();
 
+            System.out.println("Vorhandene Bezirke:");
+
+            while (rs.next()) {
+                System.out.println(rs.getInt("plz"));
+            }
+
+            System.out.println("");
+
+            System.out.println("Bitte geben sie die Postleitzahl an: ");
+            int input = Integer.parseInt(scanner.nextLine());
+
+            sqlString = "SELECT "
+                    + "(SELECT COUNT(lieferer_lieferbezirk.Lieferer_idLieferer) "
+                    + "FROM lieferer_lieferbezirk "
+                    + "WHERE lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk = lieferbezirk.idLieferbezirk) AS Lieferer "
+                    + ", "
+                    + "(Select COUNT(bestellung.idBestellung) from bestellung "
+                    + "inner join getraenkemarkt on bestellung.Getraenkemarkt_idGetraenkemarkt = getraenkemarkt.idGetraenkemarkt "
+                    + "where bestellung.bestellstatus = 'abgeschlossen' and getraenkemarkt.plz = lieferbezirk.plz "
+                    + ") as Bestellungen "
+                    + ", "
+                    + "(SELECT avg(anzahl*preis) "
+                    + "FROM bestellposition "
+                    + "JOIN artikel ON bestellposition.Artikel_idArtikel = artikel.idArtikel "
+                    + "JOIN bestellung ON bestellung.idBestellung = bestellposition.Bestellung_idBestellung "
+                    + "inner join getraenkemarkt on bestellung.Getraenkemarkt_idGetraenkemarkt = getraenkemarkt.idGetraenkemarkt "
+                    + "WHERE bestellstatus = 'abgeschlossen' "
+                    + "and getraenkemarkt.plz = lieferbezirk.plz) "
+                    + "as Preis "
+                    + "FROM lieferbezirk "
+                    + "WHERE lieferbezirk.plz = ? ";
+            stmt = conn.prepareStatement(sqlString);
+            stmt.setInt(1, input);
+            rs = stmt.executeQuery();
+
+            System.out.println("");
             while (rs.next()) {
                 String lieferer = rs.getString("Lieferer");
                 String bestellungen = rs.getString("Bestellungen");
+                String preis = rs.getString("Preis");
 
                 System.out.println("Liefer : " + lieferer);
                 System.out.println("Bestellungen : " + bestellungen);
-            }
-            stmt.close();
-            sqlString = "SELECT avg(anzahl*preis) as Preis "
-                    + "FROM bestellposition "
-                    + "JOIN artikel ON bestellposition.Artikel_idArtikel = artikel.idArtikel " // TODO Liefert zwar den Durchschnisspreis, aber von allen Bestellungen hier muss eingegrenzt werden nach der PLZ
-
-                    + "JOIN bestellung ON bestellung.idBestellung = bestellposition.Bestellung_idBestellung "
-                    + "WHERE bestellstatus = 'abgeschlossen'";
-
-            stmt = conn.prepareStatement(sqlString);
-            rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                String preis = rs.getString("Preis");
                 System.out.println("Preis : " + preis);
             }
             stmt.close();
-            conn.close();
 
         } catch (SQLException e) {
             System.err.println("*** Exception:\n" + e);
