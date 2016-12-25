@@ -31,7 +31,7 @@ public class Bonusaufgabe {
             System.out.println("");
             System.out.println("Eingabe:");
             // TODO Handle NumberFormatException
-            selection = Integer.parseInt(scanner.nextLine());
+            selection = Integer.parseInt(SCANNER.nextLine());
 
             switch (selection) {
                 case 1:
@@ -126,7 +126,7 @@ public class Bonusaufgabe {
             System.out.println("");
 
             System.out.println("Bitte geben sie die Postleitzahl an: ");
-            int input = Integer.parseInt(scanner.nextLine());
+            int input = Integer.parseInt(SCANNER.nextLine());
 
             sqlString = "SELECT "
                     + "(SELECT COUNT(lieferer_lieferbezirk.Lieferer_idLieferer) "
