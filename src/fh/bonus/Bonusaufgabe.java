@@ -30,39 +30,47 @@ public class Bonusaufgabe {
 
             System.out.println("");
             System.out.println("Eingabe:");
-            // TODO Handle NumberFormatException
-            selection = Integer.parseInt(SCANNER.nextLine());
+            try {
+                selection = Integer.parseInt(SCANNER.nextLine());
 
-            switch (selection) {
-                case 1:
-                    System.out.println("__________________");
-                    System.out.println("|Auslast anzeigen|");
-                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-                    auslast();
-                    break;
-                case 2:
-                    System.out.println("_____________________");
-                    System.out.println("|Lieferer hinzuf�gen|");
-                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-                    addLieferer();
-                    break;
-                case 3:
-                    System.out.println("_______________");
-                    System.out.println("|Bezirk �ndern|");
-                    System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-                    changeBezirk();
-                    break;
-                case 4:
-                    System.out.println("______");
-                    System.out.println("|Exit|");
-                    System.out.println("¯¯¯¯¯¯");
-                    break;
-                default:
-                    System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
-                    break;
-
+                switch (selection) {
+                    case 1:
+                        System.out.println("__________________");
+                        System.out.println("|Auslast anzeigen|");
+                        System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                        auslast();
+                        break;
+                        
+                    case 2:
+                        System.out.println("_____________________");
+                        System.out.println("|Lieferer hinzufügen|");
+                        System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                        addLieferer();
+                        break;
+                        
+                    case 3:
+                        System.out.println("_______________");
+                        System.out.println("|Bezirk ändern|");
+                        System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+                        changeBezirk();
+                        break;
+                        
+                    case 4:
+                        System.out.println("______");
+                        System.out.println("|Exit|");
+                        System.out.println("¯¯¯¯¯¯");
+                        break;
+                        
+                    default:
+                        System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("*** Exception:\n" + e);
+                System.out.println("Eingabe muss eine Zahl sein!");
             }
         } while (selection != 4);
+
         SCANNER.close();
     }
 
@@ -82,17 +90,23 @@ public class Bonusaufgabe {
     private static void changeBezirk() {
         Connection conn = createConn();
         System.out.println("Bitte geben sie die ID des Lieferers an: ");
+        int id= Integer.parseInt(SCANNER.nextLine());
         System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(SCANNER.nextLine());
+        int plz = Integer.parseInt(SCANNER.nextLine());
         try {
-            String sqlString = "UPDATE DBUSER SET USERNAME = ? WHERE USER_ID = ?";
+            String sqlString = 
+                    "UPDATE DBUSER "
+                    + "SET USERNAME = ? "
+                    + "WHERE USER_ID = ?";
+                      
             try (PreparedStatement stmt = conn.prepareStatement(sqlString)) {
-                stmt.setInt(1, input);
+                stmt.setInt(1, plz);
+                stmt.setInt(2, id);
                 stmt.executeUpdate();
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println("*** Exception:\n" + e);
+            System.err.println("*** Exception:\n" + e);
         }
     }
 
