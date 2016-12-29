@@ -82,17 +82,14 @@ public class Bonusaufgabe {
     private static void changeBezirk() {
         Connection conn = createConn();
         System.out.println("Bitte geben sie die ID des Lieferers an: ");
-        int id;
         System.out.println("Bitte geben sie die Postleitzahl an: ");
         int input = Integer.parseInt(SCANNER.nextLine());
-        id = Integer.getInteger(SCANNER.nextLine());
         try {
             String sqlString = "UPDATE DBUSER SET USERNAME = ? WHERE USER_ID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sqlString);
-            stmt.setInt(1, input);
-            stmt.executeUpdate();
-
-            stmt.close();
+            try (PreparedStatement stmt = conn.prepareStatement(sqlString)) {
+                stmt.setInt(1, input);
+                stmt.executeUpdate();
+            }
             conn.close();
         } catch (SQLException e) {
             System.out.println("*** Exception:\n" + e);
