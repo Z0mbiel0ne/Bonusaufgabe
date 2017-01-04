@@ -13,9 +13,11 @@ import java.util.Scanner;
 
 public class Bonusaufgabe {
 
+    private static final SQLService SERVICE = new SQLService();
     private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
+
         int selection = 0;
         do {
             System.out.println("|==========================|");
@@ -40,27 +42,27 @@ public class Bonusaufgabe {
                         System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
                         auslast();
                         break;
-                        
+
                     case 2:
                         System.out.println("_____________________");
                         System.out.println("|Lieferer hinzufügen|");
                         System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
                         addLieferer();
                         break;
-                        
+
                     case 3:
                         System.out.println("_______________");
                         System.out.println("|Bezirk ändern|");
                         System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
                         changeBezirk();
                         break;
-                        
+
                     case 4:
                         System.out.println("______");
                         System.out.println("|Exit|");
                         System.out.println("¯¯¯¯¯¯");
                         break;
-                        
+
                     default:
                         System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
                         break;
@@ -89,16 +91,17 @@ public class Bonusaufgabe {
 
     private static void changeBezirk() {
         Connection conn = createConn();
-        System.out.println("Bitte geben sie die ID des Lieferers an: ");
-        int id= Integer.parseInt(SCANNER.nextLine());
-        System.out.println("Bitte geben sie die Postleitzahl an: ");
+        System.out.println("Bitte geben Sie die ID des Lieferers an: ");
+        int id = Integer.parseInt(SCANNER.nextLine());
+        System.out.println("Bitte geben Sie die neue Postleitzahl an: ");
         int plz = Integer.parseInt(SCANNER.nextLine());
+
         try {
-            String sqlString = 
-                    "UPDATE DBUSER "
+            String sqlString
+                    = "UPDATE DBUSER "
                     + "SET USERNAME = ? "
                     + "WHERE USER_ID = ?";
-                      
+
             try (PreparedStatement stmt = conn.prepareStatement(sqlString)) {
                 stmt.setInt(1, plz);
                 stmt.setInt(2, id);
