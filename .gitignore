@@ -2,4 +2,4 @@
 build.xml
 /dist/
 nbproject/private/private.properties
-*.xml
+nbproject/private/private.xml

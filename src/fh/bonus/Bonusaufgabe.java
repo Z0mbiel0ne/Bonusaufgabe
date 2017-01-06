@@ -63,8 +63,10 @@ public class Bonusaufgabe {
                     System.out.println("Bitte geben Sie eine gültige Eingabe ein!");
                     break;
 
+
             }
         } while (selection != 4);
+
         SCANNER.close();
     }
 
