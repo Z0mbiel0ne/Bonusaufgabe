@@ -10,13 +10,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Bonusaufgabe {
 
+    private static final SQLService SERVICE = new SQLService();
     private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int selection = 0;
+        int selection;
         do {
             System.out.println("|==========================|");
             System.out.println("|        Verwaltung        |");
@@ -30,9 +33,8 @@ public class Bonusaufgabe {
 
             System.out.println("");
             System.out.println("Eingabe:");
-            // TODO Handle NumberFormatException
-            selection = Integer.parseInt(SCANNER.nextLine());
-
+            
+            selection = scannInt();
             switch (selection) {
                 case 1:
                     System.out.println("__________________");
@@ -48,7 +50,7 @@ public class Bonusaufgabe {
                     break;
                 case 3:
                     System.out.println("_______________");
-                    System.out.println("|Bezirk �ndern|");
+                    System.out.println("|Bezirk ändern|");
                     System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
                     changeBezirk();
                     break;
@@ -58,7 +60,7 @@ public class Bonusaufgabe {
                     System.out.println("¯¯¯¯¯¯");
                     break;
                 default:
-                    System.out.println("Bitte geben sie eine G�ltige Zahl ein!");
+                    System.out.println("Bitte geben Sie eine gültige Eingabe ein!");
                     break;
 
             }
@@ -80,33 +82,27 @@ public class Bonusaufgabe {
     }
 
     private static void changeBezirk() {
-        Connection conn = createConn();
-        System.out.println("Bitte geben sie die ID des Lieferers an: ");
-        System.out.println("Bitte geben sie die Postleitzahl an: ");
-        int input = Integer.parseInt(SCANNER.nextLine());
-        try {
-            String sqlString = "UPDATE DBUSER SET USERNAME = ? WHERE USER_ID = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sqlString)) {
-                stmt.setInt(1, input);
-                stmt.executeUpdate();
-            }
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println("*** Exception:\n" + e);
-        }
+        System.out.println("Bitte geben Sie die ID des Lieferers an: ");
+        int idLieferer = scannInt();
+        System.out.println("Bitte geben Sie die ID des Lieferbezirkes an: ");
+        int idLieferbezirk = scannInt();
+
+        SERVICE.updateBezirk(idLieferer, idLieferbezirk);
     }
 
     private static void addLieferer() {
-        Connection conn = createConn();
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            System.err.println("*** Exception:\n" + e);
-        }
+        System.out.println("Bitte geben Sie die ID des Lieferers an: ");
+        int idLieferer = scannInt();
+        System.out.println("Bitte geben Sie den Vornamen des Lieferers an: ");
+        String vorname = SCANNER.nextLine();
+
+        SERVICE.insertLieferer(idLieferer, vorname);
     }
 
     private static void auslast() {
-
+//        TODO Falls zu einer
+//        Postleitzahl kein Lieferer vorkommt, dann soll die Meldung „Lieferbezirk ohne Lieferer“
+//        ausgegeben werden.
         try {
             Connection conn = createConn();
             String sqlString = "select lieferbezirk.plz from lieferbezirk";
@@ -164,5 +160,21 @@ public class Bonusaufgabe {
         } catch (SQLException e) {
             System.err.println("*** Exception:\n" + e);
         }
+    }
+    
+    /**
+     * Scannt Int
+     * 
+     * @return int input
+     */
+    private static int scannInt() {
+        try {
+            int input = Integer.parseInt(SCANNER.nextLine());
+            return input;
+        } catch (NumberFormatException ex) {
+            System.err.println(ex);
+            System.out.println("ERROR: Die Eingabe muss eine Zahl sein!");
+        }
+        return 0;
     }
 }
