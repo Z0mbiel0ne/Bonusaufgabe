@@ -13,7 +13,7 @@ public class ConnectionManager {
     private final static String 
             URL = "jdbc:mysql://dd23226.kasserver.com:3306/",
             DATABASE = "d024ad18",
-            DRIVER = "com.mysql.jdbc.Driver",
+            DRIVER = "com.mysql.jdbc.Driver", // Verbindungsdaten
             USER = "d024ad18",
             PASSWORD = "SRU8VTc9HyPNNZb3";
     private static Connection conn;
@@ -27,9 +27,9 @@ public class ConnectionManager {
         try {
             Class.forName(DRIVER);
             try {
-                conn = DriverManager.getConnection(URL + DATABASE, USER, PASSWORD);
+                conn = DriverManager.getConnection(URL + DATABASE, USER, PASSWORD); // Verbindung aufbauen
             } catch (SQLException ex) {
-                System.err.println(ex);
+                System.err.println(ex); // Exceptions abfangen
                 System.out.println("ERROR: Failed to create the database connection.");
             }
         } catch (ClassNotFoundException ex) {
